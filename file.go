@@ -2,11 +2,11 @@ package file
 
 import (
 	"bytes"
-	"errors"
+	//"errors"
 	"log"
-	"net"
+	//"net"
 	"os"
-	"reflect"
+	//"reflect"
 	"text/template"
 	"time"
 	"strconv"
@@ -24,7 +24,7 @@ func init() {
 }
 
 // NewRawAdapter returns a configured raw.Adapter
-func NewRawAdapter(route *router.Route) (router.LogAdapter, error) {
+func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 	// route.Address, route.Options
 	
 	// get 'filename' from route.Address
@@ -54,7 +54,7 @@ func NewRawAdapter(route *router.Route) (router.LogAdapter, error) {
 	}
 	
 	// rename if exists, otherwise create it
-	err := a.Rotate()
+	err = a.Rotate()
 	if err != nil {
 	    return nil, err
 	}
@@ -65,7 +65,7 @@ func NewRawAdapter(route *router.Route) (router.LogAdapter, error) {
 type Adapter struct {
 	filename  string
 	filesize  int
-	filemaxsize   int
+	maxfilesize   int
 	fp  *os.File
 	route *router.Route
 	tmpl  *template.Template
@@ -121,4 +121,5 @@ func (a *Adapter) Rotate() (err error) {
         return err
     }
     a.filesize = 0
+    return nil
 }
