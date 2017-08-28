@@ -29,6 +29,7 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 	
 	// get 'filename' from route.Address
 	filename := route.Address
+	log.Println("filename [",filename,"]")
 	
 	tmplStr := "{{.Data}}\n"
 	tmpl, err := template.New("file").Parse(tmplStr)
@@ -40,11 +41,13 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 	maxfilesize := 1024*1024*100
 	if route.Options["maxfilesize"] != "" {
 		szStr := route.Options["maxfilesize"]
+		log.Println("maxfilesize [",maxfilesize,"]")
 		sz, err := strconv.Atoi(szStr)
 		if err == nil {
 		    maxfilesize = sz
 		}
 	}
+	
 	
 	a := Adapter{
 		route: route,
@@ -96,12 +99,12 @@ func (a *Adapter) Stream(logstream chan *router.Message) {
 	}
 }
 
-
 // Perform the actual act of rotating and reopening file.
 func (a *Adapter) Rotate() (err error) {
 	// Close existing file if open
     if a.fp != nil {
         err = a.fp.Close()
+        log.Println("Close existing file pointer")
         a.fp = nil
         if err != nil {
             return err
@@ -111,12 +114,14 @@ func (a *Adapter) Rotate() (err error) {
     _, err = os.Stat(a.filename)
     if err == nil {
         err = os.Rename(a.filename, a.filename+"."+time.Now().Format(time.RFC3339))
+        log.Println("Rename existing log file")
         if err != nil {
             return err
         }
     }
     // Create a file.
     a.fp, err = os.Create(a.filename)
+    log.Println("Create log file")
     if err != nil {
         return err
     }
