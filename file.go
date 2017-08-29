@@ -25,7 +25,8 @@ func init() {
 
 // NewRawAdapter returns a configured raw.Adapter
 func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
-	// route.Address, route.Options
+	// default log dir
+	logdir := "/var/log/"
 	
 	// get 'filename' from route.Address
 	filename := "default.log"
@@ -55,6 +56,7 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 	a := Adapter{
 		route: route,
 		filename:  filename,
+		logdir:  logdir,
 		maxfilesize: maxfilesize,
 		tmpl:  tmpl,
 	}
@@ -70,6 +72,7 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 // Adapter is a simple adapter that streams log output to a connection without any templating
 type Adapter struct {
 	filename  string
+	logdir  string
 	filesize  int
 	maxfilesize   int
 	fp  *os.File
@@ -114,16 +117,16 @@ func (a *Adapter) Rotate() (err error) {
         }
     }
     // Rename dest file if it already exists
-    _, err = os.Stat(a.filename)
+    _, err = os.Stat(a.logdir+a.filename)
     if err == nil {
-        err = os.Rename(a.filename, a.filename+"."+time.Now().Format(time.RFC3339))
+        err = os.Rename(a.logdir+a.filename, a.logdir+a.filename+"."+time.Now().Format(time.RFC3339))
         log.Println("Rename existing log file")
         if err != nil {
             return err
         }
     }
     // Create a file.
-    a.fp, err = os.Create("/var/log/"+a.filename)
+    a.fp, err = os.Create(a.logdir+a.filename)
     log.Println("Create log file")
     if err != nil {
         return err
