@@ -16,7 +16,7 @@ import (
 
 //
 // file route exaple:
-//   file:///var/log/sample.log?maxfilesize=102400
+//   file://sample.log?maxfilesize=102400
 //
 
 func init() {
@@ -28,7 +28,10 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 	// route.Address, route.Options
 	
 	// get 'filename' from route.Address
-	filename := route.Address
+	filename := "default.log"
+	if route.Address != "" {
+	    filename = route.Address
+	}
 	log.Println("filename [",filename,"]")
 	
 	tmplStr := "{{.Data}}\n"
@@ -41,12 +44,12 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 	maxfilesize := 1024*1024*100
 	if route.Options["maxfilesize"] != "" {
 		szStr := route.Options["maxfilesize"]
-		log.Println("maxfilesize [",maxfilesize,"]")
 		sz, err := strconv.Atoi(szStr)
 		if err == nil {
 		    maxfilesize = sz
 		}
 	}
+	log.Println("maxfilesize [",maxfilesize,"]")
 	
 	
 	a := Adapter{
@@ -120,7 +123,7 @@ func (a *Adapter) Rotate() (err error) {
         }
     }
     // Create a file.
-    a.fp, err = os.Create(a.filename)
+    a.fp, err = os.Create("/var/log/"+a.filename)
     log.Println("Create log file")
     if err != nil {
         return err
