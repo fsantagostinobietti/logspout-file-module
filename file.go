@@ -33,7 +33,7 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 	if route.Address != "" {
 	    filename = route.Address
 	}
-	log.Println("filename [",filename,"]")
+	//log.Println("filename [",filename,"]")
 	
 	tmplStr := "{{.Data}}\n"
 	tmpl, err := template.New("file").Parse(tmplStr)
@@ -50,7 +50,7 @@ func NewFileAdapter(route *router.Route) (router.LogAdapter, error) {
 		    maxfilesize = sz
 		}
 	}
-	log.Println("maxfilesize [",maxfilesize,"]")
+	//log.Println("maxfilesize [",maxfilesize,"]")
 	
 	
 	a := Adapter{
@@ -110,7 +110,7 @@ func (a *Adapter) Rotate() (err error) {
 	// Close existing file if open
     if a.fp != nil {
         err = a.fp.Close()
-        log.Println("Close existing file pointer")
+        //log.Println("Close existing file pointer")
         a.fp = nil
         if err != nil {
             return err
@@ -125,9 +125,9 @@ func (a *Adapter) Rotate() (err error) {
             return err
         }
     }
-    // Create a file.
+    // Create new file.
     a.fp, err = os.Create(a.logdir+a.filename)
-    log.Println("Create log file")
+    log.Println("Create new log file")
     if err != nil {
         return err
     }
