@@ -1,6 +1,5 @@
 FROM gliderlabs/logspout:master
 
-ADD modules.go modules.go
-ADD build.sh build.sh
+ADD custom/modules.go modules.go
+ADD custom/build.sh build.sh
 
-#ENV SYSLOG_FORMAT rfc3164
