@@ -1,8 +1,9 @@
 # logspout-file
-A minimalistic adapter for github.com/gliderlabs/logspout to write to file.
-It is based on instruction in [https://github.com/gliderlabs/logspout/tree/master/custom].
+A minimalistic adapter for https://github.com/gliderlabs/logspout to write to file.
+It can be useful if you want to use it in conjunction with tools for collectiong logs (ex. Splunk to generate application metrics).
 
-It can be useful if you want to use it in conjunction with Splunk for application metrics.
+Implementation is based on instruction in https://github.com/gliderlabs/logspout/tree/master/custom.
+
 
 ## features
  - it uses a log rotation strategy to save logs: file is renamed when it reaches a custom defined size
