@@ -9,11 +9,6 @@ Implementation is based on instruction in https://github.com/gliderlabs/logspout
  - it uses a log rotation strategy to save logs: file is renamed when it reaches a custom defined size
  - provided as a small docker container
  
-## build docker image
-```
-$ docker build -t logspout-file:latest .
-```
-
 ## usage example
 ```
 # start 'logspout-file' instance 
